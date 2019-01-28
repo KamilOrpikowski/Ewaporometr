@@ -25,36 +25,36 @@ RTC_DS1307 czas_rtc;
 //SCK - pin 52
 //CS - pin 53
 File plik;
-int obrut = 0; // zmiczanie obrotów silnika
-short kierunekSilnik = 0; // Zmienna okreslajaca kierunek obrotu silnika
-int pomocSD = 0; //zmienna włączająca przerwanie programu w razie problemu z kartą SD
-int krok = 0; // Zmienna pozawalająca zliczać ilość wykonanych kroków
-short pomiar = 0; //Zmienna okreslająca kolejny numer pomiaru
-short stopSilnik = 1; // zatrzymanie silnika przy zmianie kierunku obrotów
-short p_kalibracja = 0; // Zmienna służaca do zatrzymania się w wodzie
-int p_pracasilnik = 0; // zmienna uszczelniająca warunki w zmianach obrotu silnika zmniejsza ryzyko samoczynnych zmian obrotu
-int stopSilnikPraca = 1; // zmienna odpowiedzialna za przerwy silnika przy zmianie obroów podczas pracy ciągłej
-int odliczanie = 0; // zmienna uruchamiajaca i zatrzymująca proces odlicznaia pomiedzy pomiarami
-int minuty = 0; // zmienna używana w procesie odlicznaia
-int sek = 0; // zmienna używana w procesie odlicznia
+int obrut = 0; 
+short kierunekSilnik = 0; 
+int pomocSD = 0; 
+int krok = 0; 
+short pomiar = 0; 
+short stopSilnik = 1; 
+short p_kalibracja = 0; 
+int p_pracasilnik = 0; 
+int stopSilnikPraca = 1; 
+int odliczanie = 0; 
+int minuty = 0; 
+int sek = 0; 
 
 //-----------Zadeklarowanie dwóch silników na odwrotnych pinach w celu kręcenia silnikiem w różne strony bez awarii
 AccelStepper PrzeciwnieDoZegara(AccelStepper::FULL2WIRE, 10, 11);
 AccelStepper ZgodnieDoZegara(AccelStepper::FULL2WIRE, 11, 10);
 //-------------------------Zmienne klawiatura--------------------------
-int numer = 0; // pomocnicza zmienna do okreslenia komórki w tablicy
-int pos = 0; // pozycja w wierszu
-int zmiana = 0; // wlaczenie warunku zmienna sterujaca prgramem
+int numer = 0; 
+int pos = 0; 
+int zmiana = 0; 
 const byte ROWS = 4;
 const byte COLS = 4;
-char hexaKeys[ROWS][COLS] = {     //definiowanie symboli przycisków na klawiaturze
+char hexaKeys[ROWS][COLS] = {     
   {'1', '2', '3', 'A'},
   {'4', '5', '6', 'B'},
   {'7', '8', '9', 'C'},
   {'*', '0', '#', 'D'}
 };
-byte rowPins[ROWS] = {6, 7, 8, 9}; //podłączenie wierszy klawiatury
-byte colPins[COLS] = {2, 3, 4, 5}; //podłączenie kolumn klawiatury
+byte rowPins[ROWS] = {6, 7, 8, 9}; 
+byte colPins[COLS] = {2, 3, 4, 5}; 
 //------klawiatura inicjalizacja---------------
 Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 //------wyświetlacz inicjalizacja---------------
@@ -67,33 +67,33 @@ int miesiac = 0;
 int dzien = 0;
 int godzina = 0;
 int minuta = 0;
-char w_data[10]; // zmienna tablicowa pomocnicza do konwerski daty
-char w_godzina[5]; // zmienna tablicowa pomocnicza do konwerski godziny
+char w_data[10]; 
+char w_godzina[5]; 
 //--------Zmienne-Czestotliwosc-Badan-----------------------------
-int cz_badania = 6; //Zmienna ustawiająca częstotliwosc z jaką użadzenie dokonuje badań
-int cz_badania_t = 0; // Zmienna pomocnicza do czasu
-char w_badania[2]; //zmienna tablicowa pomocnicza do konwerski czestotliwosci badan
+int cz_badania = 6; 
+int cz_badania_t = 0; 
+char w_badania[2]; 
 //-------Zmienna-Pomocnicza-do-zabezpieczenia-Menu
-short pomoc_menu = 0; //zmienna uruchamiająca konwersje czestotliwowsci wtedy gdy mamy tylko jedną cyfre
+short pomoc_menu = 0; 
 //-------Zmienna-Do-Timera--------------------------------
-Timer pierwszyTimer; // Pierwszy timer do menu
-Timer kaliSilnika; // Timer do kalibracji Silnika
+Timer pierwszyTimer; 
+Timer kaliSilnika; 
 //-------Zmienna-Odczyt-Napiecia--------------------------------
-int odczytanaWartosc = 0;//Odczytana wartość z ADC
-float napiecie = 0;//Wartość przeliczona na napięcie w V
+int odczytanaWartosc = 0;
+float napiecie = 0;
 //-------Obsługa-błędów--------------------------------
-short wyllcd = 0; // wyłączanie LCD w obsłudze błędu
+short wyllcd = 0; 
 //---------------------------------------------------
 
 void setup()
 {
   Serial.begin(9600);
-  //-----------------wyświetlacz-musi-byc-pierwszy-----------------
+  //-----------------Wyświetlacz-musi-byc-pierwszy-----------------
   lcd.begin(16, 2);
   lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
   lcd.setBacklight(HIGH);
   pinMode(22, OUTPUT);
-  //-----------------Teks-uruchamiany-przy-starcie-urzadznenia-----
+  //-----------------Tekst-uruchamiany-przy-starcie-urzadznenia-----
   lcd.setCursor(2, 0);
   lcd.print("EWAPOROMETR");
   lcd.setCursor(4, 1);
@@ -110,10 +110,10 @@ void setup()
   lcd.print("INICJALIZACJA");
   delay(3000);
   //-----------------Silnik----------------------------------------
-  PrzeciwnieDoZegara.setMaxSpeed(6000); // Maksymalna predkosc
-  PrzeciwnieDoZegara.setSpeed(6000); // Predkosc starotwa
-  ZgodnieDoZegara.setMaxSpeed(6000); // Maksymalna predkosc
-  ZgodnieDoZegara.setSpeed(6000); // Predkosc starotwa
+  PrzeciwnieDoZegara.setMaxSpeed(6000); 
+  PrzeciwnieDoZegara.setSpeed(6000); 
+  ZgodnieDoZegara.setMaxSpeed(6000); 
+  ZgodnieDoZegara.setSpeed(6000); 
   //-----------------Zapis na karte--------------------------------
   String badanie = "pomiary.txt";
   testSD(); // Inicjalizacja karty SD
@@ -122,7 +122,7 @@ void setup()
   Wire.begin();
   czas_rtc.begin();
   //-----------ROZPOCZECIE--PROGRAMU-WYSWIETLANIE DANYCH------------------
-  DateTime now = czas_rtc.now(); //musi być wywołane za każdym razem przed użyciem
+  DateTime now = czas_rtc.now(); 
   lcd.clear();
   delay(500);
   lcd.setCursor(0, 0);
@@ -167,7 +167,6 @@ void loop()
   {
     pierwszyTimer.restart();
     pierwszyTimer.time(STOP);
-    // Pierwsza Akceptacja pytanie o to czy Zmienic Date
     if (customKey == 'A')
     {
       lcd.clear();
@@ -178,7 +177,7 @@ void loop()
         lcd.print("Wprowadz Date");
         zmiana++;
       }
-      else if (zmiana == 1) // sprawdzanie poprawnego formatu daty
+      else if (zmiana == 1) 
       {
         lcd.print("Wprowadz Date");
         if (pos < 10)
@@ -320,7 +319,7 @@ void loop()
         }
         delay(500);
         czas_rtc.adjust(DateTime(rok, miesiac, dzien, godzina, minuta, 0));
-        DateTime now = czas_rtc.now(); // musi być wywołane za każdym razem przed użyciem
+        DateTime now = czas_rtc.now(); 
         lcd.clear();
         delay(500);
         lcd.setCursor(0, 0);
@@ -352,7 +351,7 @@ void loop()
         }
         return;
       }
-      else if ((zmiana == 6) || (pomoc_menu == 1 && zmiana == 5)) // konwersja ilości godzin
+      else if ((zmiana == 6) || (pomoc_menu == 1 && zmiana == 5)) 
       {
         pomoc_menu = 5;
         lcd.clear();
@@ -386,7 +385,6 @@ void loop()
           zmiana = 5;
           pos = 0;
           numer = 0;
-          //pomoc_menu=0;
           delay(3000);
           lcd.clear();
           lcd.setCursor(0, 0);
@@ -432,7 +430,7 @@ void loop()
     }
     else if ((zmiana == 1 || zmiana == 3 || zmiana == 5) && (customKey == '1' || customKey == '2' || customKey == '3' || customKey == '4' || customKey == '5' || customKey == '6' || customKey == '7' || customKey == '8' || customKey == '9' || customKey == '0'))
     {
-      if (zmiana == 1 && numer < 10) //wstawianie daty
+      if (zmiana == 1 && numer < 10) 
       {
         lcd.setCursor(pos, 1);
         w_data[numer] = customKey;
@@ -446,7 +444,7 @@ void loop()
         }
       }
 
-      else if (zmiana == 3 && numer < 5) //wstawianie czasu
+      else if (zmiana == 3 && numer < 5) 
       {
         lcd.setCursor(pos, 1);
         w_godzina[numer] = customKey;
@@ -460,7 +458,7 @@ void loop()
           numer++;
         }
       }
-      else if (zmiana == 5) // wstawianie czestotliwosci badania
+      else if (zmiana == 5) 
       {
         lcd.setCursor(pos, 1);
         w_badania[numer]  = customKey;
@@ -539,22 +537,22 @@ void loop()
     }
     else if (customKey == 'B')
     {
-      if (pomoc_menu == 2)//Blad za malo cyfr przy sprawdzaniu daty oraz bledna data
+      if (pomoc_menu == 2)
       {
         pomoc_menu = 0;
         zmiana = 0;
       }
-      else if (pomoc_menu == 3)//Blad za malo cyfr przy sprawdzaniu godziny oraz bledna godzina
+      else if (pomoc_menu == 3)
       {
         pomoc_menu = 0;
         zmiana = 2;
       }
-      else if (pomoc_menu == 4)//Bledna czestotliwosc badan
+      else if (pomoc_menu == 4)
       {
         pomoc_menu = 0;
         zmiana = 4;
       }
-      else if (zmiana == 0 && pomoc_menu != 2 ) // anulowanie wprowadzania daty
+      else if (zmiana == 0 && pomoc_menu != 2 ) 
       {
         pos = 0;
         numer = 0;
@@ -580,7 +578,7 @@ void loop()
         lcd.clear();
       }
     }
-    else // zamknięcie else od obsługi programu
+    else 
     {
       if (zmiana == 0)
       {
@@ -636,23 +634,23 @@ void loop()
     return;
   }
   //----------------------------------------------------------------------------------------------------------------------------------------
-  if (zmiana == 10) //włączenie prądu
+  if (zmiana == 10) 
   {
     pierwszyTimer.time(STOP);
     lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
     lcd.setBacklight(LOW);
-    digitalWrite(39, LOW); // gaszenie diody zółtej
-    digitalWrite(41, HIGH); // zapalenie diody zielonej
-    digitalWrite(22, HIGH);//włączenie prądu silnika
+    digitalWrite(39, LOW); 
+    digitalWrite(41, HIGH); 
+    digitalWrite(22, HIGH);
     zmiana = 11;
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("KALIBRACJA");
   }
-  if (zmiana == 11)// sprawdzanie napięcia
+  if (zmiana == 11)
   {
-    odczytanaWartosc = analogRead(A0);//Odczytujemy wartość napięcia
-    napiecie = odczytanaWartosc * (5.0 / 1023.0); //Przeliczenie wartości na napięcie
+    odczytanaWartosc = analogRead(A0);
+    napiecie = odczytanaWartosc * (5.0 / 1023.0); 
     if (napiecie < 4)
     {
       digitalWrite(22, LOW);
@@ -669,20 +667,20 @@ void loop()
 
   if (zmiana == 12)//Kalibracja
   {
-    if (kierunekSilnik == 0) //Silnik działa do GÓRY
+    if (kierunekSilnik == 0) /
     {
       PrzeciwnieDoZegara.runSpeed();
     }
-    if (kierunekSilnik == 1) //Silnik działa do DOŁU
+    if (kierunekSilnik == 1) 
     {
       ZgodnieDoZegara.runSpeed();
     }
-    if (digitalRead(40) == 0 && p_kalibracja == 0) //Ustawinie kierunku silnika do GÓRY tylko pierwszy raz jak krańcówka poszła do dołu
+    if (digitalRead(40) == 0 && p_kalibracja == 0) 
     {
       kierunekSilnik = 0;
       p_kalibracja = 1;
     }
-    if (digitalRead(38) == 0 && (p_kalibracja == 0 || p_kalibracja == 1)) //Ustawinie pinu tak aby silnik kręcił się do DOłU
+    if (digitalRead(38) == 0 && (p_kalibracja == 0 || p_kalibracja == 1))
     {
       if (stopSilnik == 1)
       {
@@ -692,7 +690,7 @@ void loop()
       kierunekSilnik = 1;
       p_kalibracja = 2;
     }
-    if (digitalRead(36) == 1 && p_kalibracja == 2) // zrobienie kilku obrotów w dół i zatrzymanie
+    if (digitalRead(36) == 1 && p_kalibracja == 2) 
     {
       Serial.println("jestem tu pin 36 Kalibracja");
       p_kalibracja = 3;
@@ -705,9 +703,9 @@ void loop()
       Serial.println("Timer Dziala");
       p_kalibracja = 4;
     }
-    if (digitalRead(40) == 0 && (p_kalibracja == 2 || p_kalibracja == 3)) // Wyłączenie silnika brak lustra wody
+    if (digitalRead(40) == 0 && (p_kalibracja == 2 || p_kalibracja == 3)) 
     {
-      short stopczysc = 0; // zmienna wyłączająca czyszczenie ekranu
+      short stopczysc = 0; 
       digitalWrite(22, LOW);
       if (stopczysc == 0)
       {
@@ -728,10 +726,9 @@ void loop()
       Serial.println("Zatrzymałem się");
       p_kalibracja = 5;
     }
-    //dwa poniższe if musza kierować sie do przejścia do pracy wlaściwej silnika
-    if (p_kalibracja == 5) // zatrzymanie silnika jeśli czas się zakończył
+    
+    if (p_kalibracja == 5) 
     {
-      // digitalWrite(22, LOW);
       delay(2000);
       kierunekSilnik = 0;
       p_kalibracja = 0;
@@ -742,11 +739,10 @@ void loop()
       krok = 0;
       return;
     }
-    if (digitalRead(40) == 0 && p_kalibracja == 4)  //zatrzymanie silnika jesli po glebszym zanurzeniu dotknieto krancowki gornej
+    if (digitalRead(40) == 0 && p_kalibracja == 4)  
     {
       kaliSilnika.restart();
       kaliSilnika.time(STOP);
-      //digitalWrite(22, LOW);
       delay(2000);
       kierunekSilnik = 0;
       p_kalibracja = 0;
@@ -760,24 +756,24 @@ void loop()
       return;
     }
   }
-  else if (zmiana == 13) // Normalna praca silnika 5 pomiarów i zapis na kartę
+  else if (zmiana == 13) 
   {
-    if (kierunekSilnik == 0) //Silnik działa do GÓRY
+    if (kierunekSilnik == 0) 
     {
       PrzeciwnieDoZegara.runSpeed();
     }
 
-    if (kierunekSilnik == 1) //Silnik działa do DOŁU
+    if (kierunekSilnik == 1) 
     {
       ZgodnieDoZegara.runSpeed();
     }
-    if (digitalRead(40) == 0 && p_pracasilnik == 0) //Ustawinie kierunku silnika do GÓRY tylko pierwszy raz jak krańcówka poszła do dołu
+    if (digitalRead(40) == 0 && p_pracasilnik == 0) 
     {
       Serial.println("jestem tu pin 40");
       kierunekSilnik = 0;
     }
 
-    if (digitalRead(38) == 0 && (p_pracasilnik == 0 || p_pracasilnik == 1)) //Ustawinie pinu tak aby silnik kręcił się do DOłU
+    if (digitalRead(38) == 0 && (p_pracasilnik == 0 || p_pracasilnik == 1)) 
     {
       Serial.println("jestem tu pin 38");
       Serial.println("A stop silnik to ");
@@ -790,7 +786,7 @@ void loop()
       kierunekSilnik = 1;
       p_pracasilnik = 2;
     }
-    if (digitalRead(36) == 1 && p_pracasilnik == 2) // zapis na kartę, zwiekszenie liczby pomiarów, zmiana kierunku obrotu
+    if (digitalRead(36) == 1 && p_pracasilnik == 2) 
     {
       pomiar++;
       zapisWart();
@@ -804,9 +800,9 @@ void loop()
       p_pracasilnik = 1;
       kierunekSilnik = 0;
     }
-    if (digitalRead(40) == 0 && (p_pracasilnik == 1 || p_pracasilnik == 2)) // Wyłączenie silnika brak lustra wody
+    if (digitalRead(40) == 0 && (p_pracasilnik == 1 || p_pracasilnik == 2)) 
     {
-      short stopczyscP = 0; // zmienna wylaczajaca czyszczenie ekranu
+      short stopczyscP = 0; 
       digitalWrite(22, LOW);
       if (stopczyscP == 0)
       {
@@ -819,7 +815,7 @@ void loop()
       zmiana = 15;
       return;
     }
-    if (ZgodnieDoZegara.currentPosition() % 20 == 19) //zliczanie obrotow silnika
+    if (ZgodnieDoZegara.currentPosition() % 20 == 19) 
     {
       krok++;
       if (krok >= 160)
@@ -841,44 +837,44 @@ void loop()
   else if (zmiana == 14)
   {
     
-    digitalWrite(41, LOW); // gaszenie diody zielonej
-    digitalWrite(39, HIGH); // zapalenie diody zoltej
+    digitalWrite(41, LOW); 
+    digitalWrite(39, HIGH); 
     
     
     if (odliczanie == 1)
     {
-      lcd.setCursor(7, 0);   // ustawienie kursora
-      lcd.print ("Godzin ");   // wyświetlenie tekstu
-      lcd.print (cz_badania);   // wyświetlenie wartości przypisanej do godziny
-      lcd.print (" ");   // wyświetlenie tekstu -spacja
+      lcd.setCursor(7, 0);  
+      lcd.print ("Godzin ");  
+      lcd.print (cz_badania);   
+      lcd.print (" ");  
       
 
-      if ( minuty < 0)   // pętla -wejście gdy spełniony zostaje warunek
+      if ( minuty < 0)  
       {
-        delay (32);      // czekaj 32ms = 0,32s
-        minuty = 59;      // przypisz wartość 0
-        cz_badania --;      // zwiększ godziny
+        delay (32);      
+        minuty = 59;     
+        cz_badania --;    
       }
-      if (cz_badania < 0)   // wywołanie instrukcji warunkowej -wejście gdy spełniony zostaje warunek
+      if (cz_badania < 0)  
       {
-        cz_badania = cz_badania_t;     // przypisz wartość 0
+        cz_badania = cz_badania_t;    
       }
-      lcd.setCursor (0, 1);  // ustaw kursor
-      lcd.print (minuty);    // wyświetlenie wartości przypisanej do minuty
-      lcd.print (" min ");   // wyświetlenie tekstu
-      lcd.setCursor (8, 1);  // ustaw kursor
-      lcd.print (sek);   // wyświetlenie wartości przypisanej do sek
-      lcd.print (" SEC ");   // wyświetlenie tekstu
-      if (sek < 1)     // analogicznie jak wyżej
+      lcd.setCursor (0, 1);  
+      lcd.print (minuty);   
+      lcd.print (" min ");   
+      lcd.setCursor (8, 1);  
+      lcd.print (sek);  
+      lcd.print (" SEC ");   
+      if (sek < 1)     
       {
-        minuty --;     // zwiększ minuty
-        sek = 60;     // przypisz 0
-        delay (58);      // czekaj 58ms – 0,58s
+        minuty --;     
+        sek = 60;     
+        delay (58);      
       }
-      if (sek > 0)      // analogicznie jak wyżej
+      if (sek > 0)     
       {
-        delay (988);     // czekaj 988ms=0,988 s
-        sek --;      // zwiększ sek
+        delay (988);     
+        sek --;      
       }
       if (cz_badania == 0 && minuty == 0 && sek == 0)
       {
@@ -900,10 +896,10 @@ void loop()
   {
     if (wyllcd == 0)
     {
-      digitalWrite(22, LOW);// wylaczenie prady silnika
-      digitalWrite(37, HIGH); // zapalenie diody czerwonej
-      digitalWrite(41, LOW); // gaszenie diody zielonej
-      digitalWrite(39, LOW); // gaszenie diody zoltej
+      digitalWrite(22, LOW);
+      digitalWrite(37, HIGH); 
+      digitalWrite(41, LOW); 
+      digitalWrite(39, LOW);
 
       lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
       lcd.setBacklight(LOW);
@@ -915,7 +911,7 @@ void loop()
 }
 
 //--------------------------------------------------------------
-void sprawdzeniePliku(String nazwaPliku) // Funkcja sprawdza czy plik instnieje jęsli tak to otwiera go jesli plij nie istnieje jest tworzony nowy plik
+void sprawdzeniePliku(String nazwaPliku) 
 {
   String nnplik = nazwaPliku;
   Serial.println("sprawdzenie istnienia pliku");
@@ -923,7 +919,7 @@ void sprawdzeniePliku(String nazwaPliku) // Funkcja sprawdza czy plik instnieje 
   {
     Serial.println("plik istnieje");
     plik = SD.open(nnplik);
-    if (plik) //powinniśmy sprawdzić czy plik został poprawnie otwarty
+    if (plik) 
     {
       Serial.println("Plik otwarty do odczytu");
     }
@@ -940,24 +936,24 @@ void sprawdzeniePliku(String nazwaPliku) // Funkcja sprawdza czy plik instnieje 
         lcd.print("SPRAWDZ SD");
         delay(2000);
         pomocSD = 1;
-        if (wyllcd == 0) //wyłączenie wyswietlacza lcd
+        if (wyllcd == 0)
         {
-          digitalWrite(37, HIGH); // zapalenie diody czerwonej
-          digitalWrite(41, LOW); // gaszenie diody zielonej
-          digitalWrite(39, LOW); // gaszenie diody zoltej
+          digitalWrite(37, HIGH); 
+          digitalWrite(41, LOW); 
+          digitalWrite(39, LOW); 
           lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
           lcd.setBacklight(LOW);
           wyllcd = 1;
         }
       }
     }
-    plik.close();//zamykamy plik
+    plik.close();
   }
   else
   {
     Serial.println("nie istnieje");
     plik = SD.open(nnplik, FILE_WRITE);
-    plik.close();//zamykamy plik
+    plik.close();
     Serial.println("pusty plik utworzony");
   }
 }
@@ -993,7 +989,7 @@ void zapisWart()
   plik.print(':');
   plik.println(now.second(), DEC);
   plik.flush(); 
-  plik.close();//zamykamy plik
+  plik.close();
   obrut = 0;
   krok = 0;
 }
@@ -1029,11 +1025,11 @@ void testSD()
       lcd.print("SPRAWDZ SD");
       delay(2000);
       pomocSD = 1;
-      if (wyllcd == 0) //wyłączenie wyswietlacza lcd
+      if (wyllcd == 0) 
       {
-        digitalWrite(37, HIGH); // zapalenie diody czerwonej
-        digitalWrite(41, LOW); // gaszenie diody zielonej
-        digitalWrite(39, LOW); // gaszenie diody zoltej
+        digitalWrite(37, HIGH); 
+        digitalWrite(41, LOW); 
+        digitalWrite(39, LOW); 
         lcd.setBacklightPin(BACKLIGHT_PIN, POSITIVE);
         lcd.setBacklight(LOW);
         wyllcd = 1;
